@@ -1,6 +1,5 @@
 import google.generativeai as genai
 import json
-import os
 from dotenv import load_dotenv
 from prompts import RESUME_ANALYSIS_PROMPT
 
@@ -8,18 +7,22 @@ load_dotenv()
 
 def get_analysis_from_ai(resume_text, api_key):
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-2.5-flash')
-    
+    model = genai.GenerativeModel("gemini-2.5-flash")
+
     prompt = RESUME_ANALYSIS_PROMPT.format(resume_text=resume_text)
-    
+
     try:
         response = model.generate_content(prompt)
-        # Clean the response to ensure it's valid JSON
-        json_text = response.text.replace('```json', '').replace('```', '').strip()
+
+        json_text = (
+            response.text.replace("```json", "")
+            .replace("```", "")
+            .strip()
+        )
+
         return json.loads(json_text)
+
     except Exception as e:
-    import traceback
-    return {
-        "error": str(e),
-        "traceback": traceback.format_exc()
-    }
+        return {
+            "error": f"AI Analysis failed: {str(e)}"
+        }
