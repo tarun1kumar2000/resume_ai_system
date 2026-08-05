@@ -17,7 +17,6 @@ def get_analysis_from_ai(resume_text, api_key):
     try:
 
         response = client.chat.completions.create(
-            payload = {
     "model": "openrouter/free",
     "messages": [
         {
@@ -26,7 +25,7 @@ def get_analysis_from_ai(resume_text, api_key):
         }
     ],
     "temperature": 0.2
-}
+
         )
 
         text = response.choices[0].message.content
