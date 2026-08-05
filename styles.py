@@ -2,210 +2,349 @@ import streamlit as st
 
 def apply_custom_css():
     st.markdown("""
-    <style>
+<style>
 
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
-    }
+*{
+    font-family:'Inter',sans-serif;
+}
 
-    /* ---------- Background ---------- */
+/* =========================
+   PAGE
+========================= */
 
-    .stApp{
-        background:#F4F7FB;
-        color:#1F2937;
-    }
+.stApp{
+    background:#F8FAFC;
+    color:#111827;
+}
 
-    .main{
-        padding-top:1rem;
-    }
+.block-container{
+    max-width:1200px;
+    padding-top:1.8rem;
+    padding-bottom:2rem;
+}
 
-    /* ---------- Sidebar ---------- */
+/* =========================
+   SIDEBAR
+========================= */
 
-    section[data-testid="stSidebar"]{
-        background:#FFFFFF;
-        border-right:1px solid #E5E7EB;
-    }
+section[data-testid="stSidebar"]{
+    background:#FFFFFF;
+    border-right:1px solid #E5E7EB;
+}
 
-    /* ---------- Headings ---------- */
+section[data-testid="stSidebar"] .block-container{
+    padding-top:1.5rem;
+}
 
-    h1,h2,h3{
-        color:#111827;
-        font-weight:700;
-    }
+/* =========================
+   HEADINGS
+========================= */
 
-    p,label{
-        color:#4B5563;
-    }
+h1{
+    font-size:2.2rem;
+    font-weight:800;
+    color:#111827;
+    margin-bottom:.3rem;
+}
 
-    /* ---------- Cards ---------- */
+h2{
+    font-weight:700;
+}
 
-    div[data-testid="stMetric"]{
+h3{
+    font-weight:600;
+}
 
-        background:#FFFFFF;
+p,label{
+    color:#6B7280;
+}
 
-        border:1px solid #E5E7EB;
+/* =========================
+   METRIC CARDS
+========================= */
 
-        border-radius:14px;
+div[data-testid="stMetric"]{
 
-        padding:18px;
+    background:#FFFFFF;
 
-        box-shadow:0 3px 10px rgba(0,0,0,.05);
+    border:1px solid #E5E7EB;
 
-        transition:.25s;
-    }
+    border-radius:16px;
 
-    div[data-testid="stMetric"]:hover{
+    padding:18px;
 
-        border-color:#2563EB;
+    transition:.25s;
 
-        transform:translateY(-2px);
-    }
+    box-shadow:0 8px 25px rgba(15,23,42,.04);
 
-    /* ---------- File Uploader ---------- */
+}
 
-    [data-testid="stFileUploader"]{
+div[data-testid="stMetric"]:hover{
 
-        background:#FFFFFF;
+    transform:translateY(-3px);
 
-        border:2px dashed #CBD5E1;
+    border-color:#2563EB;
 
-        border-radius:16px;
+    box-shadow:0 15px 35px rgba(37,99,235,.08);
 
-        padding:20px;
-    }
+}
 
-    /* ---------- Buttons ---------- */
+/* =========================
+   FILE UPLOADER
+========================= */
 
-    .stButton>button{
+[data-testid="stFileUploader"]{
 
-        background:#2563EB;
+    background:#FFFFFF;
 
-        color:white;
+    border:2px dashed #93C5FD;
 
-        border:none;
+    border-radius:18px;
 
-        border-radius:10px;
+    padding:30px;
 
-        font-weight:600;
+    transition:.25s;
 
-        padding:10px 18px;
-    }
+}
 
-    .stButton>button:hover{
+[data-testid="stFileUploader"]:hover{
 
-        background:#1D4ED8;
-    }
+    border-color:#2563EB;
 
-    /* ---------- Progress ---------- */
+    background:#F9FBFF;
 
-    .stProgress > div > div{
+}
 
-        background:#2563EB;
-    }
+/* =========================
+   BUTTONS
+========================= */
 
-    /* ---------- Skill Badge ---------- */
+.stButton>button{
 
-    .skill-badge{
+    width:100%;
 
-        display:inline-block;
+    height:46px;
 
-        background:#EFF6FF;
+    border:none;
 
-        color:#1D4ED8;
+    border-radius:12px;
 
-        border:1px solid #BFDBFE;
+    background:#2563EB;
 
-        border-radius:20px;
+    color:white;
 
-        padding:6px 14px;
+    font-weight:600;
 
-        margin:5px;
+}
 
-        font-size:13px;
+.stButton>button:hover{
 
-        font-weight:500;
-    }
+    background:#1D4ED8;
 
-    /* ---------- ATS Card ---------- */
+}
 
-    .ats-score-card{
+/* =========================
+   PROGRESS BAR
+========================= */
 
-        background:#FFFFFF;
+.stProgress > div > div{
 
-        border:1px solid #E5E7EB;
+    background:#2563EB;
 
-        border-radius:16px;
+}
 
-        padding:25px;
+/* =========================
+   SKILL CHIP
+========================= */
 
-        text-align:center;
+.skill-badge{
 
-        box-shadow:0 4px 12px rgba(0,0,0,.05);
-    }
+    display:inline-block;
 
-    .ats-score-card h1{
+    padding:7px 14px;
 
-        color:#2563EB;
+    margin:5px;
 
-        font-size:48px;
+    border-radius:999px;
 
-        margin:0;
-    }
+    background:#EFF6FF;
 
-    .ats-score-card p{
+    border:1px solid #BFDBFE;
 
-        margin-top:8px;
+    color:#1D4ED8;
 
-        color:#6B7280;
-    }
+    font-size:13px;
 
-    /* ---------- Tabs ---------- */
+    font-weight:600;
 
-    button[data-baseweb="tab"]{
+}
 
-        border-radius:10px;
+/* =========================
+   ATS CARD
+========================= */
 
-        font-weight:600;
-    }
+.ats-score-card{
 
-    button[data-baseweb="tab"][aria-selected="true"]{
+    background:white;
 
-        background:#2563EB;
+    border:1px solid #E5E7EB;
 
-        color:white;
-    }
+    border-radius:18px;
 
-    /* ---------- Expander ---------- */
+    padding:28px;
 
-    details{
+    text-align:center;
 
-        background:#FFFFFF;
+    box-shadow:0 10px 25px rgba(0,0,0,.04);
 
-        border:1px solid #E5E7EB;
+}
 
-        border-radius:10px;
+.ats-score-card h1{
 
-        padding:8px;
-    }
+    font-size:60px;
 
-    /* ---------- Alerts ---------- */
+    color:#2563EB;
 
-    .stSuccess,
-    .stInfo,
-    .stWarning,
-    .stError{
+    margin-bottom:4px;
 
-        border-radius:10px;
-    }
+}
 
-    hr{
+.ats-score-card p{
 
-        border:none;
+    margin:0;
 
-        border-top:1px solid #E5E7EB;
-    }
+    color:#6B7280;
 
-    </style>
-    """, unsafe_allow_html=True)
+}
+
+/* =========================
+   TABS
+========================= */
+
+button[data-baseweb="tab"]{
+
+    border-radius:10px;
+
+    font-weight:600;
+
+    padding:10px 18px;
+
+}
+
+button[data-baseweb="tab"][aria-selected="true"]{
+
+    background:#2563EB;
+
+    color:white;
+
+}
+
+/* =========================
+   EXPANDER
+========================= */
+
+details{
+
+    border:1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    background:white;
+
+    padding:10px;
+
+    margin-bottom:10px;
+
+}
+
+/* =========================
+   ALERTS
+========================= */
+
+.stSuccess,
+.stWarning,
+.stInfo,
+.stError{
+
+    border-radius:12px;
+
+}
+
+/* =========================
+   HERO CARD
+========================= */
+
+.hero{
+
+    background:white;
+
+    border-radius:18px;
+
+    border:1px solid #E5E7EB;
+
+    padding:26px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 10px 25px rgba(15,23,42,.04);
+
+}
+
+.hero h2{
+
+    margin-bottom:8px;
+
+    color:#111827;
+
+}
+
+.hero p{
+
+    margin:0;
+
+    color:#6B7280;
+
+}
+
+/* =========================
+   DIVIDER
+========================= */
+
+hr{
+
+    border:none;
+
+    border-top:1px solid #E5E7EB;
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:768px){
+
+.block-container{
+
+padding:1rem;
+
+}
+
+h1{
+
+font-size:1.8rem;
+
+}
+
+[data-testid="stFileUploader"]{
+
+padding:20px;
+
+}
+
+}
+
+</style>
+""", unsafe_allow_html=True)
