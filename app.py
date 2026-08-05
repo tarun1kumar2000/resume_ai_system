@@ -17,7 +17,7 @@ with st.sidebar:
         st.success("✅ Token Loaded")
     except Exception:
         api_key = st.text_input(
-            "Enter Hugging Face Token",
+            "Enter OpenRouter API Key",
             type="password"
         )
 
