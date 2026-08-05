@@ -10,14 +10,14 @@ def get_analysis_from_ai(resume_text, api_key):
         base_url="https://openrouter.ai/api/v1"
     )
 
-    prompt = RESUME_ANALYSIS_PROMPT.format(
+    prompt = RESUME_ANALYSIS_PROMPT.format(           
         resume_text=resume_text
     )
 
     try:
 
         response = client.chat.completions.create(
-            model="google/gemma-3-27b-it:free",
+            "model": "google/gemma-3-12b-it:free",
             messages=[
                 {
                     "role": "user",
