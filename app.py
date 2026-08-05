@@ -13,11 +13,13 @@ with st.sidebar:
     st.title("⚙️ Configuration")
 
     try:
-    api_key = st.secrets["HF_TOKEN"]
-    st.success("✅ Hugging Face Token Loaded")
-except Exception:
-    api_key = st.text_input("Enter Hugging Face Token", type="password")
-    st.info("Get your token from https://huggingface.co/settings/tokens")
+        api_key = st.secrets["HF_TOKEN"]
+        st.success("✅ Hugging Face Token Loaded")
+    except Exception:
+        api_key = st.text_input(
+            "Enter Hugging Face Token",
+            type="password"
+        )
 
     st.divider()
     st.markdown("### About")
@@ -144,4 +146,4 @@ if uploaded_file:
                     for tip in ats.get("improvement_suggestions", []):
                         st.write(f"💡 {tip}")
 
-                st.success("✅ Hugging Face Token Loaded")
+                st.success("✅ Successfully Loaded")
