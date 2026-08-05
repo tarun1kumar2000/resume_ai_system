@@ -17,7 +17,7 @@ def get_analysis_from_ai(resume_text, api_key):
     try:
 
         response = client.chat.completions.create(
-            "model": "google/gemma-3-12b-it:free",
+            "model": "openrouter/free",
             messages=[
                 {
                     "role": "user",
