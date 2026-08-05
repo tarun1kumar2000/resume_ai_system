@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from parser_utils import extract_text_from_pdf, extract_text_from_docx
-from ai_engine import get_analysis_from_ai
+from google import genai
 from styles import apply_custom_css
 
 # Page Config
