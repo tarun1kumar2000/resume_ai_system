@@ -5,32 +5,80 @@ from ai_engine import get_analysis_from_ai
 from styles import apply_custom_css
 
 # Page Config
-st.set_page_config(page_title="AI Resume Screener", page_icon="📄", layout="wide")
+st.set_page_config(
+    page_title="AI Resume Intelligence",
+    page_icon="💼",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 apply_custom_css()
 
 # Sidebar
 with st.sidebar:
-    st.title("⚙️ Configuration")
 
+    st.markdown("""
+    # 💼 Resume AI
+    ### Intelligent Resume Analyzer
+    ---
+    """)
+    
     try:
         api_key = st.secrets["OPENROUTER_API_KEY"]
-        st.success("✅ Token Loaded")
+        st.success("✔ API Connected")
     except Exception:
         api_key = st.text_input(
-            "Enter OpenRouter API Key",
-            type="password"
+            "OpenRouter API Key",
+            type="password",
+            placeholder="sk-or-v1-..."
         )
 
     st.divider()
-    st.markdown("### About")
-    st.caption("AI-powered tool for Resume Analysis, Job Recommendation, and ATS Scoring.")
+
+    st.markdown("### Features")
+
+    st.markdown("""
+    ✔ Resume Parsing
+
+    ✔ ATS Score
+
+    ✔ Skill Analysis
+
+    ✔ Job Recommendation
+
+    ✔ Gap Analysis
+
+    ✔ AI Career Summary
+    """)
+
+    st.divider()
+
+    st.caption("Version 1.0")
     
 # Main Header
 st.title("🚀 AI Resume Screening & Recommendation")
-st.markdown("Upload a resume to get instant AI-driven career insights and ATS evaluation.")
+st.markdown("""
+<div style='padding:35px;border-radius:20px;
+background:linear-gradient(90deg,#2563EB,#3B82F6);
+text-align:center;
+margin-bottom:25px;'>
+
+<h1 style='color:white;margin-bottom:10px;'>
+AI Resume Intelligence Dashboard
+</h1>
+
+<p style='color:white;font-size:18px;'>
+Professional Resume Analysis • ATS Evaluation • AI Career Recommendation
+</p>
+
+</div>
+""", unsafe_allow_html=True)
 
 # File Uploader
-uploaded_file = st.file_uploader("Upload Resume (PDF or DOCX)", type=["pdf", "docx"])
+uploaded_file = st.file_uploader(
+    "Upload Resume",
+    type=["pdf","docx"],
+    help="Supported formats: PDF & DOCX"
+)
 
 if uploaded_file:
     if not api_key:
@@ -56,7 +104,7 @@ if uploaded_file:
                 col1, col2 = st.columns([1, 1])
                 
                 with col1:
-                    st.subheader("👤 Candidate Profile")
+                    st.subheader("🪪 Candidate Profile")
                     info = analysis.get("candidate_info", {})
                     st.write(f"**Name:** {info.get('name')}")
                     st.write(f"**Email:** {info.get('email')}")
