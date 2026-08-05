@@ -11,12 +11,18 @@ apply_custom_css()
 # Sidebar
 with st.sidebar:
     st.title("⚙️ Configuration")
-    api_key = st.text_input("Enter Gemini API Key", type="password")
-    st.info("Get your API key from [Google AI Studio](https://aistudio.google.com/)")
+
+    try:
+        api_key = st.secrets["GEMINI_API_KEY"]
+        st.success("✅ Gemini API Key Loaded")
+    except Exception:
+        api_key = st.text_input("Enter Gemini API Key", type="password")
+        st.info("Get your API key from https://aistudio.google.com/")
+
     st.divider()
     st.markdown("### About")
     st.caption("AI-powered tool for Resume Analysis, Job Recommendation, and ATS Scoring.")
-
+    
 # Main Header
 st.title("🚀 AI Resume Screening & Recommendation")
 st.markdown("Upload a resume to get instant AI-driven career insights and ATS evaluation.")
