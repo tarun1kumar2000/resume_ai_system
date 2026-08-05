@@ -1,35 +1,40 @@
 import streamlit as st
-import os
 from parser_utils import extract_text_from_pdf, extract_text_from_docx
 from ai_engine import get_analysis_from_ai
 from styles import apply_custom_css
 
-# Page Config
+# -------------------------------------------------
+# Page Configuration
+# -------------------------------------------------
+
 st.set_page_config(
-    page_title="AI Resume Intelligence",
-    page_icon="💼",
+    page_title="Resume Intelligence",
+    page_icon="📄",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
 apply_custom_css()
 
+# -------------------------------------------------
 # Sidebar
+# -------------------------------------------------
+
 with st.sidebar:
 
-    st.markdown("""
-    # 💼 Resume AI
-    ### Intelligent Resume Analyzer
-    ---
-    """)
-    
+    st.markdown("## Resume Intelligence")
+    st.caption("AI Resume Analysis Platform")
+
+    st.divider()
+
     try:
         api_key = st.secrets["OPENROUTER_API_KEY"]
-        st.success("✔ API Connected")
+        st.success("API Connected")
     except Exception:
         api_key = st.text_input(
             "OpenRouter API Key",
             type="password",
-            placeholder="sk-or-v1-..."
+            placeholder="sk-or-v1-xxxxxxxx"
         )
 
     st.divider()
@@ -37,159 +42,420 @@ with st.sidebar:
     st.markdown("### Features")
 
     st.markdown("""
-    ✔ Resume Parsing
-
-    ✔ ATS Score
-
-    ✔ Skill Analysis
-
-    ✔ Job Recommendation
-
-    ✔ Gap Analysis
-
-    ✔ AI Career Summary
-    """)
+- Resume Parsing
+- ATS Score
+- Job Recommendation
+- Skill Analysis
+- Gap Analysis
+- Professional Summary
+""")
 
     st.divider()
 
     st.caption("Version 1.0")
-    
-# Main Header
-st.title("🚀 AI Resume Screening & Recommendation")
-st.markdown("""
-<div style='padding:35px;border-radius:20px;
-background:linear-gradient(90deg,#2563EB,#3B82F6);
-text-align:center;
-margin-bottom:25px;'>
 
-<h1 style='color:white;margin-bottom:10px;'>
-AI Resume Intelligence Dashboard
-</h1>
+# -------------------------------------------------
+# Header
+# -------------------------------------------------
 
-<p style='color:white;font-size:18px;'>
-Professional Resume Analysis • ATS Evaluation • AI Career Recommendation
+st.markdown(
+"""
+<div style="background:white;
+padding:28px;
+border-radius:16px;
+border:1px solid #E5E7EB;
+margin-bottom:25px;">
+
+<h2 style="margin-bottom:8px;color:#111827;">
+Resume Intelligence
+</h2>
+
+<p style="color:#6B7280;
+font-size:16px;
+margin-bottom:0;">
+AI-powered resume analysis, ATS evaluation and career recommendations.
 </p>
 
 </div>
-""", unsafe_allow_html=True)
-
-# File Uploader
-uploaded_file = st.file_uploader(
-    "Upload Resume",
-    type=["pdf","docx"],
-    help="Supported formats: PDF & DOCX"
+""",
+unsafe_allow_html=True
 )
 
+# -------------------------------------------------
+# Upload Section
+# -------------------------------------------------
+
+st.markdown("### Upload Resume")
+
+uploaded_file = st.file_uploader(
+    "",
+    type=["pdf", "docx"],
+    help="Supported formats: PDF and DOCX"
+)
+
+st.caption(
+    "Upload your latest resume to receive an ATS score, skill analysis, professional summary and job recommendation."
+)
+
+# -------------------------------------------------
+# Processing
+# -------------------------------------------------
+
 if uploaded_file:
+
     if not api_key:
-        st.warning("Please enter your API Key in the sidebar to proceed.")
+
+        st.warning("Please enter your OpenRouter API key.")
+
     else:
-        with st.spinner("🔄 Processing Resume..."):
-            # 1. Extraction
+
+        with st.spinner("Analyzing your resume..."):
+
             file_extension = uploaded_file.name.split(".")[-1].lower()
+
             if file_extension == "pdf":
                 resume_text = extract_text_from_pdf(uploaded_file)
             else:
                 resume_text = extract_text_from_docx(uploaded_file)
 
-            # 2. AI Analysis
-            analysis = get_analysis_from_ai(resume_text, api_key)
+            analysis = get_analysis_from_ai(
+                resume_text,
+                api_key
+            )
 
             if "error" in analysis:
+
                 st.error(analysis["error"])
+
             else:
-                # --- DASHBOARD LAYOUT ---
-                
-                # Top Row: Basic Info & Recommendation
-                col1, col2 = st.columns([1, 1])
-                
-                with col1:
-                    st.subheader("🪪 Candidate Profile")
-                    info = analysis.get("candidate_info", {})
-                    st.write(f"**Name:** {info.get('name')}")
-                    st.write(f"**Email:** {info.get('email')}")
-                    
-                    with st.expander("🎓 Education"):
-                        for edu in info.get("education", []):
-                            st.write(f"• {edu.get('degree')} in {edu.get('branch')} ({edu.get('year')})")
-                    
-                    with st.expander("💼 Experience"):
-                        for exp in info.get("experience", []):
-                            st.write(f"• **{exp.get('role')}** at {exp.get('company')} ({exp.get('duration')})")
+                                # ==========================================
+                # Dashboard Overview
+                # ==========================================
 
-                with col2:
-                    st.subheader("🎯 Job Recommendation")
-                    rec = analysis.get("job_recommendation", {})
-                    score = rec.get("confidence_score", 0)
-                    
-                    st.metric("Recommended Role", rec.get("role"))
+                info = analysis.get("candidate_info", {})
+                rec = analysis.get("job_recommendation", {})
+                ats = analysis.get("ats_analysis", {})
+                score = rec.get("confidence_score", 0)
+                ats_score = ats.get("overall_score", 0)
+
+                st.markdown("## Dashboard")
+
+                c1, c2, c3 = st.columns(3)
+
+                with c1:
+                    st.metric(
+                        "ATS Score",
+                        ats_score
+                    )
+
+                with c2:
+                    st.metric(
+                        "Recommended Role",
+                        rec.get("role", "-")
+                    )
+
+                with c3:
+                    st.metric(
+                        "Match Confidence",
+                        f"{score}%"
+                    )
+
+                st.divider()
+
+                # ==========================================
+                # Profile + Recommendation
+                # ==========================================
+
+                left, right = st.columns([1, 1])
+
+                with left:
+
+                    st.subheader("Candidate Profile")
+
+                    st.write(
+                        "**Name:**",
+                        info.get("name", "-")
+                    )
+
+                    st.write(
+                        "**Email:**",
+                        info.get("email", "-")
+                    )
+
+                    education = info.get("education", [])
+
+                    if education:
+
+                        with st.expander("Education", expanded=True):
+
+                            for edu in education:
+
+                                st.markdown(
+                                    f"""
+**{edu.get('degree')}**
+
+{edu.get('branch')}
+
+{edu.get('year')}
+"""
+                                )
+
+                    experience = info.get("experience", [])
+
+                    if experience:
+
+                        with st.expander("Experience"):
+
+                            for exp in experience:
+
+                                st.markdown(
+                                    f"""
+**{exp.get('role')}**
+
+{exp.get('company')}
+
+{exp.get('duration')}
+"""
+                                )
+
+                with right:
+
+                    st.subheader("Job Recommendation")
+
                     st.progress(score / 100)
-                    st.write(f"**Match Confidence:** {score}%")
-                    st.info(rec.get("reason"))
+
+                    st.write(
+                        f"**Confidence:** {score}%"
+                    )
+
+                    st.info(
+                        rec.get("reason", "")
+                    )
 
                 st.divider()
 
-                # Second Row: ATS Score & Summary
-                col3, col4 = st.columns([1, 2])
-                
-                with col3:
-                    st.subheader("📊 ATS Analysis")
-                    ats = analysis.get("ats_analysis", {})
-                    ats_score = ats.get("overall_score", 0)
-                    
-                    color = "green" if ats_score > 70 else "orange" if ats_score > 40 else "red"
-                    st.markdown(f"""
-                        <div style="background-color:{color}; padding:20px; border-radius:10px; text-align:center; color:white;">
-                            <h2 style="margin:0;">{ats_score}</h2>
-                            <p style="margin:0;">Overall ATS Score</p>
-                        </div>
-                    """, unsafe_allow_html=True)
-                    
-                    st.write(f"**Keyword Match:** {ats.get('keyword_match_percentage')}%")
+                # ==========================================
+                # ATS + Summary
+                # ==========================================
 
-                with col4:
-                    st.subheader("📝 Professional Summary")
-                    st.write(analysis.get("professional_summary"))
+                left, right = st.columns([1, 2])
+
+                with left:
+
+                    st.subheader("ATS Analysis")
+
+                    st.markdown(
+                        f"""
+<div class="ats-score-card">
+
+<h1>{ats_score}</h1>
+
+<p>Overall ATS Score</p>
+
+</div>
+""",
+                        unsafe_allow_html=True
+                    )
+
+                    st.write(
+                        "**Keyword Match:**",
+                        f"{ats.get('keyword_match_percentage',0)}%"
+                    )
+
+                with right:
+
+                    st.subheader("Professional Summary")
+
+                    st.write(
+                        analysis.get(
+                            "professional_summary",
+                            "-"
+                        )
+                    )
 
                 st.divider()
 
-                # Third Row: Skills
-                st.subheader("🛠️ Skills Analysis")
-                s_col1, s_col2 = st.columns(2)
-                
-                with s_col1:
-                    st.markdown("**Technical Skills**")
-                    tech_skills = analysis.get("technical_skills", {})
-                    for category, skills in tech_skills.items():
+                # ==========================================
+                # Skills
+                # ==========================================
+
+                st.subheader("Skills")
+
+                tech_col, soft_col = st.columns(2)
+
+                with tech_col:
+
+                    st.markdown("#### Technical Skills")
+
+                    tech = analysis.get(
+                        "technical_skills",
+                        {}
+                    )
+
+                    for category, skills in tech.items():
+
                         if skills:
-                            st.caption(category.replace("_", " ").title())
-                            skill_html = "".join([f'<span class="skill-badge">{s}</span>' for s in skills])
-                            st.markdown(skill_html, unsafe_allow_html=True)
-                
-                with s_col2:
-                    st.markdown("**Soft Skills**")
-                    soft_skills = analysis.get("soft_skills", [])
-                    skill_html = "".join([f'<span class="skill-badge">{s}</span>' for s in soft_skills])
-                    st.markdown(skill_html, unsafe_allow_html=True)
+
+                            st.caption(
+                                category.replace("_", " ").title()
+                            )
+
+                            html = "".join(
+                                [
+                                    f"<span class='skill-badge'>{skill}</span>"
+                                    for skill in skills
+                                ]
+                            )
+
+                            st.markdown(
+                                html,
+                                unsafe_allow_html=True
+                            )
+
+                with soft_col:
+
+                    st.markdown("#### Soft Skills")
+
+                    soft = analysis.get(
+                        "soft_skills",
+                        []
+                    )
+
+                    html = "".join(
+                        [
+                            f"<span class='skill-badge'>{skill}</span>"
+                            for skill in soft
+                        ]
+                    )
+
+                    st.markdown(
+                        html,
+                        unsafe_allow_html=True
+                    )
+
+                st.divider()
+                                # ==========================================
+                # Gap Analysis
+                # ==========================================
+
+                st.subheader("Gap Analysis")
+
+                tab1, tab2, tab3 = st.tabs(
+                    [
+                        "Missing Skills",
+                        "Strengths",
+                        "Suggestions"
+                    ]
+                )
+
+                # ------------------------
+                # Missing Skills
+                # ------------------------
+
+                with tab1:
+
+                    missing = analysis.get(
+                        "missing_skills",
+                        {}
+                    )
+
+                    high_priority = missing.get(
+                        "high_priority",
+                        []
+                    )
+
+                    if high_priority:
+
+                        st.markdown(
+                            "#### High Priority Skills"
+                        )
+
+                        html = "".join(
+                            [
+                                f"<span class='skill-badge'>{skill}</span>"
+                                for skill in high_priority
+                            ]
+                        )
+
+                        st.markdown(
+                            html,
+                            unsafe_allow_html=True
+                        )
+
+                    learning_path = missing.get(
+                        "suggested_learning_path",
+                        ""
+                    )
+
+                    if learning_path:
+
+                        st.markdown("#### Learning Path")
+
+                        st.info(
+                            learning_path
+                        )
+
+                # ------------------------
+                # Strengths
+                # ------------------------
+
+                with tab2:
+
+                    strengths = ats.get(
+                        "strengths",
+                        []
+                    )
+
+                    if strengths:
+
+                        for item in strengths:
+
+                            st.success(item)
+
+                    else:
+
+                        st.write(
+                            "No strengths identified."
+                        )
+
+                # ------------------------
+                # Suggestions
+                # ------------------------
+
+                with tab3:
+
+                    weaknesses = ats.get(
+                        "weaknesses",
+                        []
+                    )
+
+                    if weaknesses:
+
+                        st.markdown(
+                            "#### Areas to Improve"
+                        )
+
+                        for item in weaknesses:
+
+                            st.error(item)
+
+                    suggestions = ats.get(
+                        "improvement_suggestions",
+                        []
+                    )
+
+                    if suggestions:
+
+                        st.markdown(
+                            "#### Recommendations"
+                        )
+
+                        for tip in suggestions:
+
+                            st.write(f"• {tip}")
 
                 st.divider()
 
-                # Bottom Row: Improvements
-                st.subheader("📈 Gap Analysis & Suggestions")
-                tab1, tab2, tab3 = st.tabs(["Missing Skills", "Strengths", "Weaknesses & Tips"])
-                
-                with tab1:
-                    missing = analysis.get("missing_skills", {})
-                    st.warning("**High Priority Missing Skills:** " + ", ".join(missing.get("high_priority", [])))
-                    st.info("**Learning Path:** " + missing.get("suggested_learning_path", ""))
-                
-                with tab2:
-                    for s in ats.get("strengths", []):
-                        st.success(f"✅ {s}")
-                
-                with tab3:
-                    for w in ats.get("weaknesses", []):
-                        st.error(f"❌ {w}")
-                    st.markdown("**Improvement Tips:**")
-                    for tip in ats.get("improvement_suggestions", []):
-                        st.write(f"💡 {tip}")
+                st.caption(
+                    "Analysis generated using AI. Results are intended to assist."
+                )
