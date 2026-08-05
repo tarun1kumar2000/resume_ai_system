@@ -174,14 +174,6 @@ if uploaded_file:
 
                 st.divider()
 
-st.markdown("""
-<div style='text-align:center;color:gray;'>
-
-Made with ❤️ using Streamlit + OpenRouter
-
-</div>
-""", unsafe_allow_html=True)
-
                 # Bottom Row: Improvements
                 st.subheader("📈 Gap Analysis & Suggestions")
                 tab1, tab2, tab3 = st.tabs(["Missing Skills", "Strengths", "Weaknesses & Tips"])
