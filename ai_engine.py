@@ -1,28 +1,50 @@
-import google.generativeai as genai
+import requests
 import json
-from dotenv import load_dotenv
 from prompts import RESUME_ANALYSIS_PROMPT
 
-load_dotenv()
+API_URL = "https://router.huggingface.co/v1/chat/completions"
 
 def get_analysis_from_ai(resume_text, api_key):
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-2.0-flash")
 
-    prompt = RESUME_ANALYSIS_PROMPT.format(resume_text=resume_text)
+    prompt = RESUME_ANALYSIS_PROMPT.format(
+        resume_text=resume_text
+    )
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "model": "Qwen/Qwen2.5-72B-Instruct",
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        "temperature": 0.2
+    }
 
     try:
-        response = model.generate_content(prompt)
 
-        json_text = (
-            response.text.replace("```json", "")
-            .replace("```", "")
-            .strip()
+        response = requests.post(
+            API_URL,
+            headers=headers,
+            json=payload,
+            timeout=120
         )
 
-        return json.loads(json_text)
+        response.raise_for_status()
+
+        text = response.json()["choices"][0]["message"]["content"]
+
+        text = text.replace("```json","").replace("```","").strip()
+
+        return json.loads(text)
 
     except Exception as e:
+
         return {
-            "error": f"AI Analysis failed: {str(e)}"
+            "error": str(e)
         }
