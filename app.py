@@ -13,11 +13,13 @@ with st.sidebar:
     st.title("⚙️ Configuration")
 
     try:
-        api_key = st.secrets["GEMINI_API_KEY"]
-        st.success("✅ Gemini API Key Loaded")
-    except Exception:
-        api_key = st.text_input("Enter Gemini API Key", type="password")
-        st.info("Get your API key from https://aistudio.google.com/")
+    api_key = st.secrets["HF_TOKEN"]
+    st.success("✅ Hugging Face Token Loaded")
+except Exception:
+    api_key = st.text_input(
+        "Enter Hugging Face Token",
+        type="password"
+    )
 
     st.divider()
     st.markdown("### About")
