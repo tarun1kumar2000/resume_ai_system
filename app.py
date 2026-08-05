@@ -146,4 +146,4 @@ if uploaded_file:
                     for tip in ats.get("improvement_suggestions", []):
                         st.write(f"💡 {tip}")
 
-                st.success("✅ Analysis Complete!")
+                st.success("✅ Hugging Face Token Loaded")
