@@ -98,6 +98,7 @@ import streamlit as st
 from parser_utils import extract_text_from_pdf, extract_text_from_docx
 from ai_engine import get_analysis_from_ai
 from styles import apply_custom_css
+)
 
 # ==========================================================
 # Page Configuration
