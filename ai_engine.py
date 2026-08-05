@@ -18,4 +18,8 @@ def get_analysis_from_ai(resume_text, api_key):
         json_text = response.text.replace('```json', '').replace('```', '').strip()
         return json.loads(json_text)
     except Exception as e:
-        return {"error": f"AI Analysis failed: {str(e)}"}
+    import traceback
+    return {
+        "error": str(e),
+        "traceback": traceback.format_exc()
+    }
