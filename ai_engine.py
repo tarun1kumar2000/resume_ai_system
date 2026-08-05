@@ -2,32 +2,25 @@ import requests
 import json
 from prompts import RESUME_ANALYSIS_PROMPT
 
-API_URL = "https://router.huggingface.co/v1/chat/completions"
+API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-72B-Instruct"
 
 def get_analysis_from_ai(resume_text, api_key):
 
-    prompt = RESUME_ANALYSIS_PROMPT.format(
-        resume_text=resume_text
-    )
+    prompt = RESUME_ANALYSIS_PROMPT.format(resume_text=resume_text)
 
     headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {api_key}"
     }
 
     payload = {
-        "model": "Qwen/Qwen2.5-72B-Instruct",
-        "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        "temperature": 0.2
+        "inputs": prompt,
+        "parameters": {
+            "max_new_tokens": 1500,
+            "temperature": 0.2
+        }
     }
 
     try:
-
         response = requests.post(
             API_URL,
             headers=headers,
@@ -35,6 +28,19 @@ def get_analysis_from_ai(resume_text, api_key):
             timeout=120
         )
 
+        response.raise_for_status()
+
+        result = response.json()
+
+        text = result[0]["generated_text"]
+
+        text = text.replace(prompt, "").strip()
+        text = text.replace("```json", "").replace("```", "").strip()
+
+        return json.loads(text)
+
+    except Exception as e:
+        return {"error": str(e)}
         response.raise_for_status()
 
         text = response.json()["choices"][0]["message"]["content"]
