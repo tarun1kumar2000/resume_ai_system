@@ -2,22 +2,31 @@ import requests
 import json
 from prompts import RESUME_ANALYSIS_PROMPT
 
-API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-72B-Instruct"
+API_URL = "https://openrouter.ai/api/v1/chat/completions"
+
 
 def get_analysis_from_ai(resume_text, api_key):
 
-    prompt = RESUME_ANALYSIS_PROMPT.format(resume_text=resume_text)
+    prompt = RESUME_ANALYSIS_PROMPT.format(
+        resume_text=resume_text
+    )
 
     headers = {
-        "Authorization": f"Bearer {api_key}"
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://streamlit.io",
+        "X-Title": "AI Resume Screener"
     }
 
     payload = {
-        "inputs": prompt,
-        "parameters": {
-            "max_new_tokens": 1500,
-            "temperature": 0.2
-        }
+        "model": "meta-llama/llama-3.3-70b-instruct:free",
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        "temperature": 0.2
     }
 
     try:
@@ -32,9 +41,18 @@ def get_analysis_from_ai(resume_text, api_key):
 
         result = response.json()
 
-        text = result[0]["generated_text"]
+        text = result["choices"][0]["message"]["content"]
 
-        text = text.replace(prompt, "").strip()
+        text = text.replace("```json", "")
+        text = text.replace("```", "")
+        text = text.strip()
+
+        return json.loads(text)
+
+    except Exception as e:
+        return {
+            "error": str(e)
+        }        text = text.replace(prompt, "").strip()
         text = text.replace("```json", "").replace("```", "").strip()
 
         return json.loads(text)
