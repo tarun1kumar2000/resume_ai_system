@@ -16,10 +16,8 @@ with st.sidebar:
     api_key = st.secrets["HF_TOKEN"]
     st.success("✅ Hugging Face Token Loaded")
 except Exception:
-    api_key = st.text_input(
-        "Enter Hugging Face Token",
-        type="password"
-    )
+    api_key = st.text_input("Enter Hugging Face Token", type="password")
+    st.info("Get your token from https://huggingface.co/settings/tokens")
 
     st.divider()
     st.markdown("### About")
