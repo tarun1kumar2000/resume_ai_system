@@ -8,7 +8,7 @@ load_dotenv()
 
 def get_analysis_from_ai(resume_text, api_key):
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     
     prompt = RESUME_ANALYSIS_PROMPT.format(resume_text=resume_text)
     
