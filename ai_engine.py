@@ -52,23 +52,4 @@ def get_analysis_from_ai(resume_text, api_key):
     except Exception as e:
         return {
             "error": str(e)
-        }        text = text.replace(prompt, "").strip()
-        text = text.replace("```json", "").replace("```", "").strip()
-
-        return json.loads(text)
-
-    except Exception as e:
-        return {"error": str(e)}
-        response.raise_for_status()
-
-        text = response.json()["choices"][0]["message"]["content"]
-
-        text = text.replace("```json","").replace("```","").strip()
-
-        return json.loads(text)
-
-    except Exception as e:
-
-        return {
-            "error": str(e)
         }
