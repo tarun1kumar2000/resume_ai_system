@@ -13,8 +13,8 @@ with st.sidebar:
     st.title("⚙️ Configuration")
 
     try:
-        api_key = st.secrets["HF_TOKEN"]
-        st.success("✅ Hugging Face Token Loaded")
+        api_key = st.secrets["OPENROUTER_API_KEY"]
+        st.success("✅ Token Loaded")
     except Exception:
         api_key = st.text_input(
             "Enter Hugging Face Token",
