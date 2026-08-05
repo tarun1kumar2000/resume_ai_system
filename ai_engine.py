@@ -17,14 +17,14 @@ def get_analysis_from_ai(resume_text, api_key):
     try:
 
         response = client.chat.completions.create(
-    "model": "openrouter/free",
-    "messages": [
+    model="openrouter/free",
+    messages=[
         {
             "role": "user",
             "content": prompt
         }
     ],
-    "temperature": 0.2
+    temperature=0.2
         )
 
         text = response.choices[0].message.content
